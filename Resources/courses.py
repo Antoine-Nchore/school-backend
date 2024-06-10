@@ -21,6 +21,7 @@ class Course(Resource):
     parser.add_argument('category', required=True, help="Category is required!")
     parser.add_argument('price', required=True, help="Price is required!")
     parser.add_argument('image', required=True, help="Image is required!")
+    parser.add_argument('pdf_file', required=False, help="You might be required to add a pdf_file!")
     parser.add_argument('description', required=True, help="Description is required!")
     parser.add_argument('duration', required=True, help="Duration is required!")
 
