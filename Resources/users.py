@@ -26,7 +26,7 @@ class User(Resource):
 
     @marshal_with(user_fields)
     def post(self):
-        data = User.parser.parse_args()
+        data = User.user_parser.parse_args()
         data['password'] = generate_password_hash(data['password'])
         data['role'] = 'client'
 
@@ -36,10 +36,6 @@ class User(Resource):
         if email:
             return {"message": "Email already taken", "status": "fail"}, 400
 
-        phone_number = UserModel.query.filter_by(phone_number=data['phone_number']).one_or_none()
-
-        if phone_number:
-            return {"message": "Phone number already exists", "status": "fail"}, 400
         try:
             user = UserModel(**data)
             db.session.add(user)
