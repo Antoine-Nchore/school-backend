@@ -74,6 +74,7 @@ class Login(Resource):
             is_password_correct = user.check_password(data['password'])
             if is_password_correct:
                 user_json = user.to_json()
+                user_json['role'] = user.role
                 access_token = create_access_token(identity=user_json['id'])
                 refresh_token = create_refresh_token(identity=user_json['id'])
                 return {"message": "Login successful",
