@@ -35,7 +35,7 @@ class Course(Resource):
             return courses
     
     @jwt_required()
-    #@admin_required    
+    @admin_required    
     def post(self):
         data = Course.parser.parse_args()
         course = CourseModel(**data)
@@ -49,7 +49,7 @@ class Course(Resource):
             return {"message": "Unable to add course", "status": "fail"}
         
     @jwt_required()
-    #@admin_required 
+    @admin_required 
     def delete(self, id):
         try:
             course = CourseModel.query.filter_by(id=id).first()
@@ -64,7 +64,7 @@ class Course(Resource):
             return {"message": "Unable to delete course", "status": "success"}
         
     @jwt_required()
-    #@admin_required 
+    @admin_required 
     def patch(self, id):
         if id:
             course = CourseModel.query.filter_by(id=id).first()

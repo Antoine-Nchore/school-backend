@@ -43,5 +43,35 @@ api.add_resource(Feedback,'/feedback','/feedback/<int:id>')
 api.add_resource(Events,'/event','/event/<int:id>')
 api.add_resource(ProfileResource, '/profile','/profile/<int:id>')
 
+def login():
+    # Get user credentials from request data
+    data = Login.user_parser.parse_args()
+    email_or_username = data['usernameOrEmail']
+    password = data['password']
+
+    # Check if user exists by email or username
+    user = UserModel.query.filter(or_(UserModel.email == email_or_username, UserModel.username == email_or_username)).first()
+
+    if user:
+        if user.verified:  # Check if user is verified
+            if user.check_password(password):  # Validate password
+                # Generate access token and refresh token
+                user_json = user.to_json()
+                access_token = create_access_token(identity=user_json['id'])
+                refresh_token = create_refresh_token(identity=user_json['id'])
+                return {
+                    "message": "Login successful",
+                    "status": "success",
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "user": user_json
+                }, 200
+            else:
+                return {"message": "Invalid email/username or password", "status": "fail"}, 403
+        else:
+            return {"message": "Email not verified. Please verify your email first.", "status": "fail"}, 403
+    else:
+        return {"message": "Invalid email/username or password", "status": "fail"}, 404
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
