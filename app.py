@@ -17,13 +17,16 @@ from Resources.events import Events
 from Resources.eventEnrolment import EnrolledEvents
 from flask import Flask
 from flask_mail import Mail, Message
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
+load_dotenv()
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['BUNDLE_ERRORS'] = True
-app.config["JWT_SECRET_KEY"] = "super-secret"
+app.config["JWT_SECRET_KEY"] = os.environ.get('JWT_SECRET_KEY')
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=30)
 
 api = Api(app)
@@ -74,4 +77,4 @@ def login():
         return {"message": "Invalid email/username or password", "status": "fail"}, 404
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=False, port=5000)
